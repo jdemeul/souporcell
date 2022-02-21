@@ -13,6 +13,7 @@ parser.add_argument("-k", "--clusters", required = True, help = "number cluster,
 parser.add_argument("-p", "--ploidy", required = False, default = "2", help = "ploidy, must be 1 or 2, default = 2")
 parser.add_argument("--min_alt", required = False, default = "10", help = "min alt to use locus, default = 10.")
 parser.add_argument("--min_ref", required = False, default = "10", help = "min ref to use locus, default = 10.")
+parser.add_argument("--mapq", required = False, default = "30", help = "minimal mapping quality for vartrix, default = 30.")
 parser.add_argument("--max_loci", required = False, default = "2048", help = "max loci per cell, affects speed, default = 2048.")
 parser.add_argument("--restarts", required = False, default = 100, type = int, 
     help = "number of restarts in clustering, when there are > 12 clusters we recommend increasing this to avoid local minima")
@@ -505,7 +506,7 @@ def vartrix(args, final_vcf, final_bam):
         barcodes = args.out_dir + "/barcodes.tsv"
     with open(args.out_dir + "/vartrix.err", 'w') as err:
         with open(args.out_dir + "/vartrix.out", 'w') as out:
-            cmd = ["vartrix", "--mapq", "30", "-b", final_bam, "-c", barcodes, "--scoring-method", "coverage", "--threads", str(args.threads),
+            cmd = ["vartrix", "--mapq", str(int(args.mapq)), "-b", final_bam, "-c", barcodes, "--scoring-method", "coverage", "--threads", str(args.threads),
                 "--ref-matrix", ref_mtx, "--out-matrix", alt_mtx, "-v", final_vcf, "--fasta", args.fasta]
             if not(args.no_umi) and args.umi_tag == "UB":
                 cmd.append("--umi")
